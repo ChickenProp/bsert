@@ -1,5 +1,4 @@
 import unittest
-import operator
 
 class _Bsert(object):
     def __or__(self, other):
