@@ -1,9 +1,21 @@
 import unittest
+import traceback
+import sys
 
 class _Bsert(object):
     def __or__(self, other):
         return _Wrapped(other)
 
+    def __call__(self, other):
+        if not other:
+            try:
+                raise AssertionError
+            except AssertionError:
+                f = sys.exc_info()[2].tb_frame.f_back
+            stck = traceback.extract_stack(f)
+            tc = unittest.case.TestCase('__init__')
+            tc.assert_(False, stck[-1][-1])
+            
 class _Wrapped(unittest.TestCase):
     def __init__(self, obj):
         # TestCase needs to be passed the name of one of its methods. I'm not
